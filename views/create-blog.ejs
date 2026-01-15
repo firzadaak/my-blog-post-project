@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Blog</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="create-blog-body">
+  <div class="create-blog-container">
+    <h1>Create Your Blog Post</h1>
+    <% if (error) { %>
+      <p class="error"><%= error %></p>
+    <% } %>
+    <form action="/create-blog" method="POST" enctype="multipart/form-data" class="create-blog-form">
+      <p>Blog Post</p>
+      <input type="text" name="title" placeholder="Blog Post Title" required>
+      <input type="text" name="imageHeader" placeholder="Image Header (Optional)">
+      <textarea name="subHeaders" placeholder="Sub Headers (Optional)"></textarea>
+      <p>Email</p>
+      <input type="email" name="email" placeholder="Email">
+      <p>Add Images or Videos for your BlogPost</p>
+      <input type="file" name="image" accept="image/*,video/*">
+      <p>Create Your Blogs Here</p>
+      <textarea name="content" placeholder="Blog Content" required></textarea>
+      <button type="submit">Create</button>
+    </form>
+    <a href="/main" class="back-link">Back to Main</a>
+  </div>
+</body>
+</html>

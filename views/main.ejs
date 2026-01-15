@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Main Page</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="main-body">
+  <header class="main-header">
+    <span>BLOG POST</span>
+    <nav>Home | Description</nav>
+    <div class="welcome">Welcome, <%= userName %> <a href="/logout">Logout</a></div>
+  </header>
+
+  <% if (blog) { %>
+    <div class="blog-container" <% if (blog.imageUrl) { %>style="background-image: url('<%= blog.imageUrl %>');"<% } %>>
+      <% if (!blog.imageUrl) { %>
+        <h2>Your Image or a Video background!</h2>
+      <% } %>
+      <p class="sub-headers">Sub Headers Here</p>
+      <div class="buttons">
+        <form action="/next-blog" method="POST" style="display:inline;">
+          <input type="hidden" name="nextId" value="<%= nextId || '' %>">
+          <button class="next-btn" type="submit" <%= !nextId ? 'disabled' : '' %>>Next Blog</button>
+        </form>
+        <a href="/create-blog"><button class="create-btn">Create Blog</button></a>
+      </div>
+    </div>
+  <% } else { %>
+    <div class="blog-container">
+      <h2>Your Image or a Video background!</h2>
+      <p class="sub-headers">Sub Headers Here</p>
+      <div class="buttons">
+        <a href="/create-blog"><button class="create-btn">Create Blog</button></a>
+      </div>
+      <p>No blogs available. Create one!</p>
+    </div>
+  <% } %>
+
+    <!-- Main blog content section -->
+  <% if (blog) { %>
+    <div class="blog-content">
+      <h2 class="blog-title"><%= blog.title %></h2>
+      <div class="content-with-like">
+        <div class="blog-text">
+          <p><%= blog.content %></p>
+        </div>
+        <div class="like-section">
+          <form action="/like" method="POST" style="display: inline;">
+            <input type="hidden" name="blogId" value="<%= blog.id %>">
+            <button type="submit" class="like-btn" title="<%= blog.likes && blog.likes.includes(user.uid) ? 'Unlike' : 'Like' %>">
+              <% if (blog.likes && blog.likes.includes(user.uid)) { %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="#ff0000" stroke="#ff0000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+              <% } else { %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+              <% } %>
+            </button>
+          </form>
+          <span class="like-count"><%= blog.likes ? blog.likes.length : 0 %> likes</span>
+        </div>
+      </div>
+    </div>
+  <% } %>
+
+  <!-- Comments below the main section -->
+  <% if (blog) { %>
+    <div class="comments-wrapper">
+      <h3>Comments</h3>
+      <% comments.forEach(comment => { %>
+        <p><strong><%= comment.userEmail %>:</strong> <%= comment.text %></p>
+      <% }); %>
+
+      <form action="/comment" method="POST" id="commentForm">
+        <input type="hidden" name="blogId" value="<%= blog.id %>">
+        <textarea name="comment" placeholder="Add a comment (Press Enter to submit)" required onkeydown="if(event.keyCode===13 && !event.shiftKey){event.preventDefault(); document.getElementById('commentForm').submit();}"></textarea>
+      </form>
+    </div>
+  <% } %>
+</body>
+</html>
